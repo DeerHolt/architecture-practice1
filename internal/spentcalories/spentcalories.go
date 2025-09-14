@@ -1,3 +1,4 @@
+// Пакет spentcalories выводит информацию о потраченных калориях после активности.
 package spentcalories
 
 import (
@@ -54,8 +55,7 @@ func distance(steps int, height float64) float64 {
 	}
 
 	totalDistance := float64(steps) * stepLength
-	totalDistance = totalDistance / float64(mInKm)
-	return totalDistance
+	return totalDistance / float64(mInKm)
 }
 
 func meanSpeed(steps int, height float64, duration time.Duration) float64 {
@@ -67,10 +67,13 @@ func meanSpeed(steps int, height float64, duration time.Duration) float64 {
 		return 0.0
 	}
 
-	result := totalDistance / duration.Hours()
-	return result
+	return totalDistance / duration.Hours()
 }
 
+// TrainingInfo анализирует данные тренировки и возвращает отчет.
+// Если вид активности отличен от определенных, возвращаем ошибку.
+// Также при неположительных или нулевых физиологических параметрах, выводим пустую строку
+// и логируем ошибку.
 func TrainingInfo(data string, weight, height float64) (string, error) {
 	var calories float64
 	steps, activity, duration, err := parseTraining(data)
@@ -102,6 +105,9 @@ func TrainingInfo(data string, weight, height float64) (string, error) {
 	return result, nil
 }
 
+// RunningSpentCalories возвращает информацию о потраченных калориях после бега.
+// При неположительных или нулевых физиологических параметрах, выводим нулевое значение
+// и записываем ошибку.
 func RunningSpentCalories(steps int, weight, height float64, duration time.Duration) (float64, error) {
 	if steps <= 0 {
 		return 0, fmt.Errorf("steps must be greater than 0")
@@ -123,6 +129,9 @@ func RunningSpentCalories(steps int, weight, height float64, duration time.Durat
 	return resultCalories, nil
 }
 
+// WalkingSpentCalories возвращает информацию о потраченных калориях после ходьбы.
+// При неположительных или нулевых физиологических параметрах, выводим нулевое значение
+// и записываем ошибку.
 func WalkingSpentCalories(steps int, weight, height float64, duration time.Duration) (float64, error) {
 	if steps <= 0 {
 		return 0, fmt.Errorf("steps must be greater than 0")

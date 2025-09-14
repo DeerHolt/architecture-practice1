@@ -1,3 +1,4 @@
+// Пакет daysteps выводит дневную сводку.
 package daysteps
 
 import (
@@ -19,12 +20,12 @@ const (
 
 // parsePackage проверяет, что полученные данные корректны
 func parsePackage(data string) (int, time.Duration, error) {
-	myData := strings.Split(data, ",")
-	if len(myData) != 2 {
+	parsedData := strings.Split(data, ",")
+	if len(parsedData) != 2 {
 		return 0, 0, fmt.Errorf("data is invalid")
 	}
 
-	steps, err := strconv.Atoi(myData[0])
+	steps, err := strconv.Atoi(parsedData[0])
 	if err != nil {
 		log.Println(err)
 		return 0, 0, fmt.Errorf("steps is not integer")
@@ -33,7 +34,7 @@ func parsePackage(data string) (int, time.Duration, error) {
 		return 0, 0, fmt.Errorf("steps must be greater than 0")
 	}
 
-	duration, err := time.ParseDuration(myData[1])
+	duration, err := time.ParseDuration(parsedData[1])
 	if err != nil {
 		log.Println(err)
 		return 0, 0, fmt.Errorf("duration does not meet time format")
@@ -45,6 +46,9 @@ func parsePackage(data string) (int, time.Duration, error) {
 	return steps, duration, nil
 }
 
+// DayActionInfo возвращает информацию о дневной активности.
+// При неположительных или нулевых физиологическх параметрах, выводим пустую строку
+// и логируем ошибку.
 func DayActionInfo(data string, weight, height float64) string {
 	steps, duration, err := parsePackage(data)
 	if err != nil {
@@ -52,11 +56,13 @@ func DayActionInfo(data string, weight, height float64) string {
 		return ""
 	}
 	if weight <= 0 {
-		fmt.Println("weight must be greater than 0")
+		err = fmt.Errorf("weight must be greater than 0")
+		log.Println(err)
 		return ""
 	}
 	if height <= 0 {
-		fmt.Println("height must be greater than 0")
+		err = fmt.Errorf("height must be greater than 0")
+		log.Println(err)
 		return ""
 	}
 
